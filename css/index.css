@@ -16,11 +16,13 @@
 }
 
 .calc__display {
+  box-sizing: border-box;
   background: black;
   color: #fff;
   font-size: 30px;
   border-radius: 10px;
   padding: 10px;
+  min-height: 54px;
 }
 
 .calc__keyboard {
@@ -44,6 +46,10 @@
     font-size: 25px;
     cursor: pointer;
     transition: background .3s, color .3s;
+}
+.calc__button:last-child {
+  grid-column: 2 span;
+  background-color: blue;
 }
 .calc__button:hover {
     background-color: rgba(0, 0, 255, 0.26);
