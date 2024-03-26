@@ -63,7 +63,7 @@
         button.textContent = btnValue;
        
         button.addEventListener('click', ()=> {
-            console.log(btnValue)
+            // console.log(btnValue)
             doClick(btnValue)});
 
         return button;
@@ -121,7 +121,7 @@
             }
             value = value.slice(0, -1);}
             catch(err) {
-                console.log(err)
+                // console.log(err)
                     AllClear()
             }
         }
@@ -155,7 +155,7 @@
         } 
         
         else {
-            console.log('va1:', Number(value1),'operator:' , operator, 'va2:', value2, 'result:', result);
+            // console.log('va1:', Number(value1),'operator:' , operator, 'va2:', value2, 'result:', result);
                 value = value + btnValue;
         }
         
@@ -190,7 +190,7 @@
         let x =  Number(value1);
         let y = Number(value2);
        try {
-        console.log('va1:', value1,'operator:' , operator, 'va2:', value2, 'result:', result);
+        // console.log('va1:', value1,'operator:' , operator, 'va2:', value2, 'result:', result);
        
         if(operator === '+') {
             result = x + y;
@@ -221,7 +221,6 @@
         if(value1 && value2) { 
             getResult();
             value1 = result;
-            // result = 0;
             value2 = '';
             lastRender = false;
         } 
