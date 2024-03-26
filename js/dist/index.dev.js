@@ -1,11 +1,5 @@
 "use strict";
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
 (function () {
   'use struct';
 
@@ -16,77 +10,16 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
   var value1IsEmpty = true;
   var operator = '';
   var result = 0;
-  var lastRender = false; // Класс вычисления
+  var lastRender = false; // Отчистка всего
 
-  var Calculator =
-  /*#__PURE__*/
-  function () {
-    function Calculator(x, y) {
-      _classCallCheck(this, Calculator);
-
-      this.x = x;
-      this.y = y;
-    }
-
-    _createClass(Calculator, [{
-      key: "setX",
-      value: function setX(num) {
-        this.x = numCheck(num);
-      }
-    }, {
-      key: "setY",
-      value: function setY(num) {
-        this.y = numCheck(num);
-      }
-    }, {
-      key: "logSum",
-      value: function logSum() {
-        return this.x + this.y;
-      }
-    }, {
-      key: "logMul",
-      value: function logMul() {
-        return this.x * this.y;
-      }
-    }, {
-      key: "logSub",
-      value: function logSub() {
-        return this.x - this.y;
-      }
-    }, {
-      key: "logDiv",
-      value: function logDiv() {
-        if (this.y === 0) {
-          throw new Error('second operand is 0');
-        }
-
-        return this.x / this.y;
-      }
-    }, {
-      key: "logDivCirc",
-      value: function logDivCirc() {
-        if (this.y === 0) {
-          throw new Error('second operand is 0');
-        }
-
-        return this.x % this.y;
-      }
-    }]);
-
-    return Calculator;
-  }(); // Создал экземпляр калсса
-
-
-  var calculatorExemplar = new Calculator(0, 0); // Проверка на число
-
-  function numCheck(num) {
-    num = Number(num);
-
-    if (isNaN(num)) {
-      throw new Error('Value is not a number');
-    }
-
-    return num;
+  function AllClear() {
+    value = '';
+    value1 = '';
+    value2 = '';
+    value1IsEmpty = true;
+    operator = '';
+    result = 0;
+    lastRender = false;
   } // Рисует корпус калькулятора
 
 
@@ -154,63 +87,61 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     var operandsList = ['%', '/', 'x', '+'];
 
     if (btnValue === 'ac') {
-      calculatorExemplar.setX = 0;
-      calculatorExemplar.setY = 0;
-      value1 = '';
-      value2 = '';
-      value = '';
-      result = 0;
-      operator = '';
-      value1IsEmpty = true;
+      AllClear();
     } else if (btnValue === '⇐') {
-      if (result) {
-        result = String(result).slice(0, -1);
-      }
+      try {
+        if (result) {
+          // AllClear()
+          result = result.slice(0, -1);
 
-      if (result) {
-        result = String(result).slice(0, -1);
-      }
-    } // else if('%/x+'.includes(btnValue)) {
-    //     OperatorAction()
-    // }
-    // else if(btnValue === '%') {
-    //     OperatorAction()
-    // } else if(btnValue === '/') {
-    //     OperatorAction()
-    // } else if(btnValue === 'x') {
-    //     OperatorAction()
-    // } else if(btnValue === '+') {
-    //     OperatorAction()
-    // }
-    else if (isNaN(btnValue) && operandsList.includes(btnValue)) {
-        getRepeatResult(btnValue);
-      } else if (btnValue === '-') {
-        if (value1 === '') {
-          value = btnValue + value;
+          if (Number(value1 === result)) {
+            value1 = result;
+          }
+        } else if (value2) {
+          value2 = value2.slice(0, -1);
+        } else if (operator) {
+          operator = '';
+        } else if (value1) {
+          value1 = value1.slice(0, -1);
         }
 
-        if (operator && value2 === '') {
-          value = btnValue + value;
-        } else {
-          getRepeatResult(btnValue);
-        }
-      } else if (btnValue === '.') {
-        value = value + btnValue;
-      } else if (btnValue === '=') {
-        getRepeatResult('', value);
+        value = value.slice(0, -1);
+      } catch (err) {
+        console.log(err);
+        AllClear();
+      }
+    } else if (isNaN(btnValue) && operandsList.includes(btnValue)) {
+      getRepeatResult(btnValue);
+    } else if (btnValue === '-') {
+      if (value1 === '') {
+        value = btnValue + value;
+      }
+
+      if (operator && value2 === '') {
+        value = btnValue + value;
       } else {
+        getRepeatResult(btnValue);
+      }
+    } else if (btnValue === '.') {
+      if (value === '') {
+        value = '0.';
+      }
+
+      if (!value.includes('.')) {
         value = value + btnValue;
       }
+    } else if (btnValue === '=') {
+      getRepeatResult('', '');
+    } else {
+      console.log('va1:', Number(value1), 'operator:', operator, 'va2:', value2, 'result:', result);
+      value = value + btnValue;
+    }
 
     if (value1IsEmpty) {
       value1 = value;
     } else {
       value2 = value;
     }
-
-    console.log(value1);
-    console.log(operator);
-    console.log(value2);
 
     if (lastRender) {
       Render("".concat(value1).concat(operator).concat(value2, "=").concat(result));
@@ -226,35 +157,38 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
   function getResult() {
+    var x = Number(value1);
+    var y = Number(value2);
+
     try {
-      console.log('va1', value1, 'va2', value2);
-      calculatorExemplar.setX(Number(value1));
-      calculatorExemplar.setY(Number(value2));
+      console.log('va1:', value1, 'operator:', operator, 'va2:', value2, 'result:', result);
 
       if (operator === '+') {
-        result = calculatorExemplar.logSum();
+        result = x + y;
       }
 
       if (operator === '-') {
-        result = calculatorExemplar.logSub();
+        result = x - y;
       }
 
       if (operator === '/') {
-        result = calculatorExemplar.logDiv();
+        result = x / y;
       }
 
       if (operator === '%') {
-        result = calculatorExemplar.logDivCirc();
+        result = x % y;
       }
 
       if (operator === 'x') {
-        result = calculatorExemplar.logMul();
+        result = x * y;
       }
 
       lastRender = true;
     } catch (err) {
-      Render('err');
+      Render(err.message);
     }
+
+    return result;
   }
 
   function getRepeatResult(btnValue) {
@@ -262,7 +196,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
     if (value1 && value2) {
       getResult();
-      value1 = result;
+      value1 = result; // result = 0;
+
       value2 = '';
       lastRender = false;
     }

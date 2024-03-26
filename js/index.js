@@ -10,69 +10,26 @@
 
     let value1IsEmpty = true;
     let operator = '';
-
     let result = 0;
+    
     let lastRender = false;
 
-    // Класс вычисления
-    class Calculator {
-        constructor (x, y) {
-            this.x = x;
-            this.y = y;
-        }
-    
-        setX(num) {
-           this.x = numCheck(num);
-            
-        }
-        setY(num) {
-    
-            this.y = numCheck(num);
-          
-        }
-    
-        logSum() {
-            return this.x + this.y;
-        }
-    
-        logMul() {
-            return this.x * this.y;
-        }
-    
-        logSub() {
-            return this.x - this.y;
-        }
-    
-        logDiv() {
-            if(this.y === 0) {
-                throw new Error('second operand is 0');
-            }
-            return this.x / this.y;
-        }
-        logDivCirc() {
-            if(this.y === 0) {
-                throw new Error('second operand is 0');
-            }
-            return this.x % this.y;
-        }
-    }
-    
-    // Создал экземпляр калсса
-    const calculatorExemplar = new Calculator (0, 0)
 
-    // Проверка на число
-    function numCheck(num) {
+    // Отчистка всего
+    function AllClear () {
+        value = '';
+        value1 = '';
+        value2 = '';
+    
+        value1IsEmpty = true;
+        operator = '';
+        result = 0;
         
-        num = Number(num);
-        
-        if(isNaN(num)) {
-            throw new Error('Value is not a number');
-        }
-
-        return num;
-
+        lastRender = false;
     }
-    
+
+
+
     // Рисует корпус калькулятора
     function drawCalcFrame (keyBoard, display) {
         
@@ -126,6 +83,7 @@
         return keyboard;
     }
 
+
     // При нажатии на кнопку
     function doClick (btnValue) {
         
@@ -135,42 +93,38 @@
      
 
         if(btnValue === 'ac') {
-            
-            calculatorExemplar.setX = 0;
-            calculatorExemplar.setY = 0;
-            
-            value1 = '';
-            value2 = '';
-            value =  '';
-            result = 0;
-            operator = '';
-            value1IsEmpty = true;
+          
+            AllClear()
 
         }
 
         else if (btnValue === '⇐') {
-            
+            try {
             if(result) {
-                result = String(result).slice(0, -1);
+                // AllClear()
+                result = result.slice(0, -1);
+                if(Number((value1) === result)){
+                    value1 = result;
+                }
             }
-            
-            if(result) {
-                result = String(result).slice(0, -1);
+
+            else if(value2) {
+                value2 = value2.slice(0, -1);
+            }
+
+            else if(operator) {
+                operator = '';
+            }
+
+            else if(value1) {
+                value1 = value1.slice(0, -1);
+            }
+            value = value.slice(0, -1);}
+            catch(err) {
+                console.log(err)
+                    AllClear()
             }
         }
-        // else if('%/x+'.includes(btnValue)) {
-        //     OperatorAction()
-        // }
-        // else if(btnValue === '%') {
-        //     OperatorAction()
-        // } else if(btnValue === '/') {
-        //     OperatorAction()
-        // } else if(btnValue === 'x') {
-        //     OperatorAction()
-        // } else if(btnValue === '+') {
-        //     OperatorAction()
-        // }
- 
         else if(isNaN(btnValue) && operandsList.includes(btnValue)) {
             getRepeatResult(btnValue) 
         } 
@@ -188,15 +142,21 @@
         } 
         
         else if(btnValue === '.') {
-            value = value+btnValue;
+            if(value === '') {
+                value = '0.';
+            }
+            if(!value.includes('.')){
+                value = value+btnValue;
+            }
         } 
         
         else if(btnValue === '=') {
-            getRepeatResult('', value)
+            getRepeatResult('', '')
         } 
         
         else {
-            value = value + btnValue;
+            console.log('va1:', Number(value1),'operator:' , operator, 'va2:', value2, 'result:', result);
+                value = value + btnValue;
         }
         
 
@@ -207,10 +167,7 @@
         else {
             value2 = value;
         }
-        
-        console.log(value1);
-        console.log(operator);
-        console.log(value2);
+ 
         if(lastRender) {
             Render(`${value1}${operator}${value2}=${result}`)
             
@@ -230,32 +187,33 @@
 
     // результат мат операции
     function getResult() {
+        let x =  Number(value1);
+        let y = Number(value2);
        try {
-        console.log('va1', value1, 'va2', value2);
-        calculatorExemplar.setX(Number(value1));
-        calculatorExemplar.setY(Number(value2));
+        console.log('va1:', value1,'operator:' , operator, 'va2:', value2, 'result:', result);
+       
         if(operator === '+') {
-            result = calculatorExemplar.logSum();
+            result = x + y;
         }
         if(operator === '-') {
-            result = calculatorExemplar.logSub();
+            result =  x - y;
         }
         if(operator === '/') {
-            result = calculatorExemplar.logDiv();
+            result =  x / y;
         }
         if(operator === '%') {
-            result = calculatorExemplar.logDivCirc();
+            result =  x % y;
         }
         if(operator === 'x') {
-            result = calculatorExemplar.logMul();
+            result =  x * y;
         }
         
         lastRender = true;
        }
        catch (err) {
-        Render('err')
+        Render(err.message)
        } 
-
+       return result;
      
     }
 
@@ -263,6 +221,7 @@
         if(value1 && value2) { 
             getResult();
             value1 = result;
+            // result = 0;
             value2 = '';
             lastRender = false;
         } 
