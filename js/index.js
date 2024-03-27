@@ -221,7 +221,7 @@
        catch (err) {
         Render(err.message)
        } 
-       return Number(result = result.toFixed(4));
+       return result = Math.round(result*100)/100 ;
      
     }
 
