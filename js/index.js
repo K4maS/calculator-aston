@@ -2,7 +2,7 @@
 
     'use struct'
 
-    const keys = ['ac', '⇐', '%', '/', 7, 8, 9, 'x', 4, 5, 6, '-', 1, 2,3 ,'+', 0, '.', '='];
+    const keys = ['ac', '⇐', '%', '/', '7', '8', '9', 'x', '4', '5', '6', '-', '1', '2', '3' ,'+', '0', '.', '='];
 
     let value = '';
     let value1 = '';
@@ -63,7 +63,7 @@
         button.textContent = btnValue;
        
         button.addEventListener('click', ()=> {
-            // console.log(btnValue)
+
             doClick(btnValue)});
 
         return button;
@@ -88,20 +88,18 @@
     function doClick (btnValue) {
         
         const operandsList = [ '%', '/' , 'x',  '+' ];
-    
 
-     
-
+        // Полная отчистка
         if(btnValue === 'ac') {
           
             AllClear()
 
         }
 
+        // Посимвольная отчистка
         else if (btnValue === '⇐') {
             try {
             if(result) {
-                // AllClear()
                 result = result.slice(0, -1);
                 if(Number((value1) === result)){
                     value1 = result;
@@ -121,22 +119,28 @@
             }
             value = value.slice(0, -1);}
             catch(err) {
-                // console.log(err)
+          
                     AllClear()
             }
         }
-        else if(isNaN(btnValue) && operandsList.includes(btnValue)) {
-            getRepeatResult(btnValue) 
+
+        // Проверка на все операнды кроме -
+        else if(operandsList.includes(btnValue) ) {
+            if( value1 !== '') {
+                getRepeatResult(btnValue) 
+            }
+           
         } 
         
+        // Проверка на -
         else if(btnValue === '-' ) {
-            if( value1 === '') {
+            if( !value1.includes('-') && value1 === '') {
                 value = btnValue +  value;
             }
-            if( operator && value2 === '') {
-                value = btnValue +  value;
+            else if( !value1.includes('-') && operator && value2 === '') {
+                value = btnValue + value;
             }
-            else {
+            else if(value1.length > 1) {
                 getRepeatResult(btnValue) 
             }
         } 
@@ -155,8 +159,11 @@
         } 
         
         else {
-            // console.log('va1:', Number(value1),'operator:' , operator, 'va2:', value2, 'result:', result);
+
+            if(!(value.length === 0 && btnValue === '0')){
                 value = value + btnValue;
+            }
+
         }
         
 
@@ -189,8 +196,8 @@
     function getResult() {
         let x =  Number(value1);
         let y = Number(value2);
+        
        try {
-        // console.log('va1:', value1,'operator:' , operator, 'va2:', value2, 'result:', result);
        
         if(operator === '+') {
             result = x + y;
@@ -209,14 +216,16 @@
         }
         
         lastRender = true;
+        operator = '';
        }
        catch (err) {
         Render(err.message)
        } 
-       return result;
+       return Number(result = result.toFixed(4));
      
     }
 
+    // При повторном нажатии на оператор
     function getRepeatResult(btnValue, val = '') { 
         if(value1 && value2) { 
             getResult();
@@ -224,9 +233,12 @@
             value2 = '';
             lastRender = false;
         } 
-        
+
+        if(!operator) {
+            operator = btnValue;
+        }
+
         value1IsEmpty = false;
-        operator = btnValue;
         value = val;
  
     }
