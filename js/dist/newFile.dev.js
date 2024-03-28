@@ -3,7 +3,7 @@
 (function () {
   'use struct';
 
-  var keys = ['ac', '⇐', '%', '/', '7', '8', '9', 'x', '4', '5', '6', '-', '1', '2', '3', '+', '0', '.', '='];
+  var keys = ['ac', '⇐', '%', '/', 7, 8, 9, 'x', 4, 5, 6, '-', 1, 2, 3, '+', 0, '.', '='];
   var value = '';
   var value1 = '';
   var value2 = '';
@@ -44,6 +44,7 @@
     button.classList.add('calc__button');
     button.textContent = btnValue;
     button.addEventListener('click', function () {
+      console.log(btnValue);
       doClick(btnValue);
     });
     return button;
@@ -83,58 +84,58 @@
 
 
   function doClick(btnValue) {
-    var operandsList = ['%', '/', 'x', '+']; // Полная отчистка
+    var operandsList = ['%', '/', 'x', '+'];
 
     if (btnValue === 'ac') {
       AllClear();
-    } // Посимвольная отчистка
-    else if (btnValue === '⇐') {
-        try {
-          if (result) {
-            result = 0;
-          } else if (value2) {
-            value2 = value2.slice(0, -1);
-          } else if (operator) {
-            operator = '';
-          } else if (value1) {
-            value1 = value1.slice(0, -1);
-            value1IsEmpty = true;
-          }
+    } else if (btnValue === '⇐') {
+      try {
+        if (result) {
+          // AllClear()
+          result = result.slice(0, -1);
 
-          value = value.slice(0, -1);
-        } catch (err) {
-          // console.warn(err);
-          AllClear();
+          if (Number(value1 === result)) {
+            value1 = result;
+          }
+        } else if (value2) {
+          value2 = value2.slice(0, -1);
+        } else if (operator) {
+          operator = '';
+        } else if (value1) {
+          value1 = value1.slice(0, -1);
         }
-      } // Проверка на все операнды кроме -
-      else if (operandsList.includes(btnValue)) {
-          if (value1 !== '') {
-            getRepeatResult(btnValue);
-          }
-        } // Проверка на -
-        else if (btnValue === '-') {
-            if (!value1.includes('-') && value1 === '') {
-              value = btnValue + value;
-            } else if (!value1.includes('-') && operator && value2 === '') {
-              value = btnValue + value;
-            } else if (value1.length > 1) {
-              getRepeatResult(btnValue);
-            }
-          } else if (btnValue === '.') {
-            if (value === '') {
-              value = '0.';
-            }
 
-            if (!value.includes('.')) {
-              value = value + btnValue;
-            }
-          } else if (btnValue === '=') {
-            getRepeatResult('', '');
-          } else {
-            if (btnValue === '0' && (value === '' || value === '-0')) {} else if (!(value1 === result && !operator)) {
-              value = value + btnValue;
-            }
-          }
+        value = value.slice(0, -1);
+      } catch (err) {
+        console.log(err);
+        AllClear();
+      }
+    } else if (isNaN(btnValue) && operandsList.includes(btnValue)) {
+      getRepeatResult(btnValue);
+    } else if (btnValue === '-') {
+      if (value1 === '') {
+        value = btnValue + value;
+      }
+
+      if (operator && value2 === '') {
+        value = btnValue + value;
+      } else {
+        getRepeatResult(btnValue);
+      }
+    } else if (btnValue === '.') {
+      if (value === '') {
+        value = '0.';
+      }
+
+      if (!value.includes('.')) {
+        value = value + btnValue;
+      }
+    } else if (btnValue === '=') {
+      getRepeatResult('', '');
+    } else {
+      console.log('va1:', Number(value1), 'operator:', operator, 'va2:', value2, 'result:', result);
+      value = value + btnValue;
+    }
 
     if (value1IsEmpty) {
       value1 = value;
@@ -146,11 +147,10 @@
       Render("".concat(value1).concat(operator).concat(value2, "=").concat(result));
       lastRender = false;
     } else {
-      if (value1 === '' && value2 === '') {
-        Render(result);
-      } else {
-        Render("".concat(value1).concat(operator).concat(value2));
-      }
+      // if(value1 === '' && value2 === '') {
+      //     Render(result)
+      // }else {
+      Render("".concat(value1).concat(operator).concat(value2)); // }
     }
   } // результат мат операции
 
@@ -160,6 +160,8 @@
     var y = Number(value2);
 
     try {
+      console.log('va1:', value1, 'operator:', operator, 'va2:', value2, 'result:', result);
+
       if (operator === '+') {
         result = x + y;
       }
@@ -181,29 +183,25 @@
       }
 
       lastRender = true;
-      operator = '';
-    } catch (err) {// Render(err.message)
+    } catch (err) {
+      Render(err.message);
     }
 
-    return result = Math.round(result * 100) / 100;
-  } // При повторном нажатии на оператор
-
+    return result;
+  }
 
   function getRepeatResult(btnValue) {
     var val = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
 
     if (value1 && value2) {
-      getResult();
-      value1 = result;
-      value2 = '';
+      getResult(); // value1 = result;
+      // value2 = '';
+
       lastRender = false;
     }
 
-    if (!operator) {
-      operator = btnValue;
-    }
-
     value1IsEmpty = false;
+    operator = btnValue;
     value = val;
   } // Отрисовка калькулятора
 
@@ -214,8 +212,7 @@
     var display = drawDisplay(displayText);
     var calcFrame = drawCalcFrame(keyboard, display);
     app.append(calcFrame);
-  }; // Первый рендер
-
+  };
 
   Render(0);
 })();
