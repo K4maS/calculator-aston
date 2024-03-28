@@ -137,6 +137,7 @@
         } 
         
         else if(btnValue === '.') {
+            
             if(value === '') {
                 value = '0.';
             }
