@@ -150,8 +150,10 @@
         } 
         
         else {
-            let valvar1 = value1 === result;
-            if(!valvar1) {
+            if(btnValue === '0' && (value=== '' || value === '-0')) {
+                
+            }
+            else if(!(value1 === result && !operator)) {
                 value = value + btnValue;
             }
         }
