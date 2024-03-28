@@ -1,5 +1,4 @@
 (()=>{
-
     'use struct'
 
     const keys = ['ac', '⇐', '%', '/', '7', '8', '9', 'x', '4', '5', '6', '-', '1', '2', '3' ,'+', '0', '.', '='];
@@ -14,7 +13,6 @@
     
     let lastRender = false;
 
-
     // Отчистка всего
     function AllClear () {
         value = '';
@@ -27,8 +25,6 @@
         
         lastRender = false;
     }
-
-
 
     // Рисует корпус калькулятора
     function drawCalcFrame (keyBoard, display) {
@@ -90,20 +86,15 @@
         const operandsList = [ '%', '/' , 'x',  '+' ];
 
         // Полная отчистка
-        if(btnValue === 'ac') {
-          
+        if(btnValue === 'ac') { 
             AllClear()
-
         }
 
         // Посимвольная отчистка
         else if (btnValue === '⇐') {
             try {
             if(result) {
-                result = result.slice(0, -1);
-                if(Number((value1) === result)){
-                    value1 = result;
-                }
+                result = 0; 
             }
 
             else if(value2) {
@@ -116,10 +107,11 @@
 
             else if(value1) {
                 value1 = value1.slice(0, -1);
+                value1IsEmpty = true;
             }
             value = value.slice(0, -1);}
             catch(err) {
-          
+                    // console.warn(err);
                     AllClear()
             }
         }
@@ -129,7 +121,6 @@
             if( value1 !== '') {
                 getRepeatResult(btnValue) 
             }
-           
         } 
         
         // Проверка на -
@@ -159,17 +150,18 @@
         } 
         
         else {
-
-            if(!(value.length === 0 && btnValue === '0')){
+            let valvar1 = value1 === result;
+            if(!valvar1) {
                 value = value + btnValue;
             }
-
         }
         
 
 
         if(value1IsEmpty) {
+     
             value1 = value;
+            
         }
         else {
             value2 = value;
@@ -177,7 +169,6 @@
  
         if(lastRender) {
             Render(`${value1}${operator}${value2}=${result}`)
-            
             lastRender = false;
         }
         else {
@@ -185,11 +176,8 @@
                 Render(result)
             }else {
                 Render(`${value1}${operator}${value2}`)
-            }
-            
+            } 
         }
-        
-
     }
 
     // результат мат операции
@@ -219,10 +207,9 @@
         operator = '';
        }
        catch (err) {
-        Render(err.message)
+        // Render(err.message)
        } 
        return result = Math.round(result*100)/100 ;
-     
     }
 
     // При повторном нажатии на оператор
@@ -240,7 +227,6 @@
 
         value1IsEmpty = false;
         value = val;
- 
     }
 
     // Отрисовка калькулятора
@@ -253,10 +239,9 @@
         const display = drawDisplay(displayText);
         const calcFrame = drawCalcFrame(keyboard, display);
         
-        app.append(calcFrame);
-        
+        app.append(calcFrame);  
     }  
-
+    
+    // Первый рендер
     Render(0);
-
 })();

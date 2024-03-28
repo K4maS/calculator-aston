@@ -1,7 +1,13 @@
+body {
+  background:rgba(76, 102, 47, 0.568);
+}
+
 #app {
     display: flex;
     align-items: center;
+    justify-content: center;
     flex-direction: column;
+    height: 90vh;
 }
 
 .calc__frame {
@@ -13,6 +19,7 @@
   flex-direction: column;
   gap: 30px;
   width: 290px;
+  box-shadow: 10px 0 37px rgba(0, 0, 0, 0.363);
 }
 
 .calc__display {

@@ -91,21 +91,19 @@
     else if (btnValue === '⇐') {
         try {
           if (result) {
-            result = result.slice(0, -1);
-
-            if (Number(value1 === result)) {
-              value1 = result;
-            }
+            result = 0;
           } else if (value2) {
             value2 = value2.slice(0, -1);
           } else if (operator) {
             operator = '';
           } else if (value1) {
             value1 = value1.slice(0, -1);
+            value1IsEmpty = true;
           }
 
           value = value.slice(0, -1);
         } catch (err) {
+          // console.warn(err);
           AllClear();
         }
       } // Проверка на все операнды кроме -
@@ -133,7 +131,9 @@
           } else if (btnValue === '=') {
             getRepeatResult('', '');
           } else {
-            if (!(value.length === 0 && btnValue === '0')) {
+            var valvar1 = value1 === result;
+
+            if (!valvar1) {
               value = value + btnValue;
             }
           }
@@ -184,8 +184,7 @@
 
       lastRender = true;
       operator = '';
-    } catch (err) {
-      Render(err.message);
+    } catch (err) {// Render(err.message)
     }
 
     return result = Math.round(result * 100) / 100;
@@ -217,7 +216,8 @@
     var display = drawDisplay(displayText);
     var calcFrame = drawCalcFrame(keyboard, display);
     app.append(calcFrame);
-  };
+  }; // Первый рендер
+
 
   Render(0);
 })();
